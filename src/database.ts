@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { Collection } from './collections.js';
 import { MemoryCache, Cache } from './cache.js';
+import { LocalFSStorage } from './localstorage.js';
 
 export class ArdotoDB {
     sqliteconn: Database.Database;
@@ -23,10 +24,6 @@ export class ArdotoDB {
         this.dbpath = dbpath;
         this.dbname = dbname;
         this.checkDBPath();
-
-        // init sqlite3 db
-        this.sqliteconn = new Database(path.join(this.dbfullpath, 'data.sqlite3'));
-        this.sqliteconn.pragma('journal_mode = WAL');
         
         // Build options
         this.options = {
@@ -36,6 +33,13 @@ export class ArdotoDB {
             },
             ... options
         }
+
+        // init sqlite3 db
+        this.sqliteconn = new Database(path.join(this.dbfullpath, 'data.sqlite3'));
+        this.sqliteconn.pragma('journal_mode = WAL');
+
+        // init local storage
+        this.storage = new LocalFSStorage(this.dbfullpath);
 
         // init caches
         this.tableCache = new MemoryCache();
