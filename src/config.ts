@@ -1,3 +1,4 @@
 export interface ArdotoDBOptions {
-    fileStorageEngine?: string
+    fileStorageEngine?: string,
+    metaStorageEngine?: string
 }
