@@ -1,11 +1,10 @@
-import { or, Query } from '../dist/src/query.js';
+import { lte, gt, notEqual, or, Query } from '../dist/src/query.js';
+import { ArdotoDB } from '../dist/src/database.js';
 import test from 'node:test';
 
-test('queries', (t) => {
-    const q = Query.create('demo')
-                .where([
-                    {'name': 'peter', 'surname': 'pollywalk'}
-                ])
-                .limit(20)
-                .all();
+test('queries', async (t) =>  {
+    const db = new ArdotoDB('demo-db', './sandbox');
+
+    const r = await db.collection('demo').all();
+    console.log(r);
 });

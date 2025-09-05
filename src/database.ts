@@ -68,6 +68,12 @@ export class ArdotoDB {
         }
     }
 
+    public runQuery(sql: string, params: {} = {}): any {
+        const stmtm = this.sqliteconn.prepare(sql);
+        const res = stmtm.all(params);
+        return res;
+    }
+
     public collection(collectionName: string): Collection {
         return new Collection(this, collectionName);
     }

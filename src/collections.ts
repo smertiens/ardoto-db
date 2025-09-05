@@ -1,6 +1,7 @@
 import { ArdotoDB } from "./database.js";
 import { DocumentIdFactory } from "./factories.js";
 import { CollectionRowResult } from "./types.js";
+import { QueryConditions, Query } from "./query.js";
 
 export class Collection {
     private dbinst: ArdotoDB;
@@ -58,11 +59,12 @@ export class Collection {
         return JSON.parse(r.document);
     }
 
-    public all(): object[]|[] {
-        const stmt = this.dbinst.sqliteconn.prepare(`SELECT * FROM coll_${this.name}`);    
-        const r = stmt.all() as CollectionRowResult[];
-        return r.map((row, idx) => {
-            return JSON.parse(row.document);
-        });
+    public async all(): Promise<object[]|[]> {
+        return Query.create(this.dbinst, `coll_${this.name}`).all();
+    }
+
+    public find(cond: QueryConditions[]) {
+        return Query.create(this.dbinst, `coll_${this.name}`)
+            .where(cond)
     }
 }
